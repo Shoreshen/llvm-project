@@ -5899,7 +5899,7 @@ public:
     return true;
   }
 
-  // Return ture if should transform:
+  // Return true if should transform:
   //    `t0:vXiY = select i1, t1, t2`
   // To:
   //    `t3:vPiQ = bitcast t1`

@@ -61,7 +61,7 @@ EVT EVT::getExtendedVectorVT(LLVMContext &Context, EVT VT, ElementCount EC) {
 
 EVT EVT::getIntegerVectorWithElementWidth(LLVMContext &Context,
                                           unsigned NewEltWidth) const {
-  if (!isVector() || !isInteger())
+  if (!isVector() || !isInteger() || isScalableVector())
     return EVT();
 
   unsigned TotalBits = getVectorMinNumElements() * getScalarSizeInBits();
