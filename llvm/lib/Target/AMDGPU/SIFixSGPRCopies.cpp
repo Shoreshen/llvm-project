@@ -929,7 +929,6 @@ bool SIFixSGPRCopies::lowerSpecialCase(MachineInstr &MI,
 
     if (tryMoveVGPRConstToSGPR(MI.getOperand(1), DstReg, MI.getParent(), MI,
                                MI.getDebugLoc())) {
-      I = std::next(I);
       MI.eraseFromParent();
       return true;
     }
