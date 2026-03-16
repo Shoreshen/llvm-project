@@ -929,7 +929,7 @@ bool SIFixSGPRCopies::lowerSpecialCase(MachineInstr &MI,
 
     if (tryMoveVGPRConstToSGPR(MI.getOperand(1), DstReg, MI.getParent(), MI,
                                MI.getDebugLoc())) {
-      MI.eraseFromParent();
+      I = MI.eraseFromParent();
       return true;
     }
 
