@@ -2794,6 +2794,9 @@ def NotHasMinMaxDenormModes : Predicate<"!Subtarget->supportsMinMaxDenormModes()
 
 def HasFminFmaxLegacy : Predicate<"Subtarget->hasFminFmaxLegacy()">;
 
+def HasSALUFloatInstsNotGFX11_7 :
+Predicate<"!Subtarget->hasGFX11_7Insts() && Subtarget->hasSALUFloatInsts()">;
+
 def HasSDWA8 : Predicate<"Subtarget->hasSDWA()">,
   AssemblerPredicate<(all_of (not FeatureGFX9Insts), FeatureSDWA)>;
 
