@@ -2794,7 +2794,9 @@ def NotHasMinMaxDenormModes : Predicate<"!Subtarget->supportsMinMaxDenormModes()
 
 def HasFminFmaxLegacy : Predicate<"Subtarget->hasFminFmaxLegacy()">;
 
-def HasSALUFloatInstsNotGFX11_7 :
+// GFX11.7 has the SALU float instructions but not the SALU float min/max
+// instructions (s_min/max_f32/f16), so those patterns must be disabled there.
+def HasSALUFloatMinMaxInsts :
 Predicate<"!Subtarget->hasGFX11_7Insts() && Subtarget->hasSALUFloatInsts()">;
 
 def HasSDWA8 : Predicate<"Subtarget->hasSDWA()">,
