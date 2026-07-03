@@ -4091,10 +4091,6 @@ AMDGPURegisterBankInfo::getInstrMapping(const MachineInstr &MI) const {
   case AMDGPU::G_FFLOOR:
   case AMDGPU::G_FCEIL:
   case AMDGPU::G_INTRINSIC_ROUNDEVEN:
-  case AMDGPU::G_FMINNUM:
-  case AMDGPU::G_FMAXNUM:
-  case AMDGPU::G_FMINIMUMNUM:
-  case AMDGPU::G_FMAXIMUMNUM:
   case AMDGPU::G_INTRINSIC_TRUNC:
   case AMDGPU::G_STRICT_FADD:
   case AMDGPU::G_STRICT_FSUB:
@@ -4104,6 +4100,18 @@ AMDGPURegisterBankInfo::getInstrMapping(const MachineInstr &MI) const {
     unsigned Size = Ty.getSizeInBits();
     if (Subtarget.hasSALUFloatInsts() && Ty.isScalar() &&
         (Size == 32 || Size == 16) && isSALUMapping(MI))
+      return getDefaultMappingSOP(MI);
+    return getDefaultMappingVOP(MI);
+  }
+  case AMDGPU::G_FMINNUM:
+  case AMDGPU::G_FMAXNUM:
+  case AMDGPU::G_FMINIMUMNUM:
+  case AMDGPU::G_FMAXIMUMNUM: {
+    LLT Ty = MRI.getType(MI.getOperand(0).getReg());
+    unsigned Size = Ty.getSizeInBits();
+    if (Subtarget.hasSALUFloatInsts() && Ty.isScalar() &&
+        (Size == 32 || Size == 16) && isSALUMapping(MI) &&
+        Subtarget.hasGFX11_7Insts())
       return getDefaultMappingSOP(MI);
     return getDefaultMappingVOP(MI);
   }

@@ -545,29 +545,16 @@ SITargetLowering::SITargetLowering(const TargetMachine &TM,
   if (Subtarget->hasIEEEMinimumMaximumInsts()) {
     setOperationAction(
         {ISD::FMINNUM, ISD::FMAXNUM, ISD::FMINIMUMNUM, ISD::FMAXIMUMNUM},
-        MVT::f64, Legal);
+        {MVT::f64, MVT::f32}, Legal);
   } else {
     setOperationAction(
         {ISD::FMINNUM, ISD::FMAXNUM, ISD::FMINIMUMNUM, ISD::FMAXIMUMNUM},
-        MVT::f64, Custom);
+        {MVT::f64, MVT::f32}, Custom);
     // These are really only legal for ieee_mode functions. We should be
     // avoiding them for functions that don't have ieee_mode enabled, so just
     // say they are legal.
-    setOperationAction({ISD::FMINNUM_IEEE, ISD::FMAXNUM_IEEE}, MVT::f64, Legal);
-  }
-
-  // If has v_{min|max}_num_f32 but no s_{min|max}_num_f32, leave it for custom
-  // function
-  if (Subtarget->hasIEEEMinimumMaximumInsts() &&
-      Subtarget->hasSALUMinimumMaximumInsts()) {
-    setOperationAction(
-        {ISD::FMINNUM, ISD::FMAXNUM, ISD::FMINIMUMNUM, ISD::FMAXIMUMNUM},
-        MVT::f32, Legal);
-  } else {
-    setOperationAction(
-        {ISD::FMINNUM, ISD::FMAXNUM, ISD::FMINIMUMNUM, ISD::FMAXIMUMNUM},
-        MVT::f32, Custom);
-    setOperationAction({ISD::FMINNUM_IEEE, ISD::FMAXNUM_IEEE}, MVT::f32, Legal);
+    setOperationAction({ISD::FMINNUM_IEEE, ISD::FMAXNUM_IEEE},
+                       {MVT::f64, MVT::f32}, Legal);
   }
 
   if (Subtarget->haveRoundOpsF64())
@@ -838,8 +825,7 @@ SITargetLowering::SITargetLowering(const TargetMachine &TM,
                         MVT::v8f16, MVT::v8bf16, MVT::v16f16, MVT::v16bf16,
                         MVT::v32f16, MVT::v32bf16},
                        Custom);
-    if (Subtarget->hasIEEEMinimumMaximumInsts() &&
-        Subtarget->hasSALUMinimumMaximumInsts()) {
+    if (Subtarget->hasIEEEMinimumMaximumInsts()) {
       setOperationAction(
           {ISD::FMAXNUM, ISD::FMINNUM, ISD::FMINIMUMNUM, ISD::FMAXIMUMNUM},
           MVT::f16, Legal);
@@ -8759,15 +8745,12 @@ SDValue SITargetLowering::lowerFMINNUM_FMAXNUM(SDValue Op,
   const MachineFunction &MF = DAG.getMachineFunction();
   const SIMachineFunctionInfo *Info = MF.getInfo<SIMachineFunctionInfo>();
   bool IsIEEEMode = Info->getMode().IEEE;
-  bool IsDivergent = Op.getNode()->isDivergent();
-  bool NeedExpand = (IsDivergent && !Subtarget->hasIEEEMinimumMaximumInsts()) ||
-                    (!IsDivergent && !Subtarget->hasSALUMinimumMaximumInsts());
 
   // FIXME: Assert during selection that this is only selected for
   // ieee_mode. Currently a combine can produce the ieee version for non-ieee
   // mode functions, but this happens to be OK since it's only done in cases
   // where there is known no sNaN.
-  if (IsIEEEMode && NeedExpand)
+  if (IsIEEEMode)
     return expandFMINNUM_FMAXNUM(Op.getNode(), DAG);
 
   if (VT == MVT::v4f16 || VT == MVT::v8f16 || VT == MVT::v16f16 ||
@@ -8785,11 +8768,8 @@ SITargetLowering::lowerFMINIMUMNUM_FMAXIMUMNUM(SDValue Op,
   const MachineFunction &MF = DAG.getMachineFunction();
   const SIMachineFunctionInfo *Info = MF.getInfo<SIMachineFunctionInfo>();
   bool IsIEEEMode = Info->getMode().IEEE;
-  bool IsDivergent = Op.getNode()->isDivergent();
-  bool NeedExpand = (IsDivergent && !Subtarget->hasIEEEMinimumMaximumInsts()) ||
-                    (!IsDivergent && !Subtarget->hasSALUMinimumMaximumInsts());
 
-  if (IsIEEEMode && NeedExpand)
+  if (IsIEEEMode)
     return expandFMINIMUMNUM_FMAXIMUMNUM(Op.getNode(), DAG);
 
   if (VT == MVT::v4f16 || VT == MVT::v8f16 || VT == MVT::v16f16 ||

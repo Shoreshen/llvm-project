@@ -186,7 +186,7 @@ defm IEEEMinimumMaximumInsts : AMDGPUSubtargetFeature<"ieee-minimum-maximum-inst
 >;
 
 defm SALUMinimumMaximumInsts : AMDGPUSubtargetFeature<"salu-minimum-maximum-insts",
-  "Has s_minimum/maximum_f16/f32 and s_max/min_num_f16/f32 instructions"
+  "Has s_minimum/maximum_f16/f32 instructions"
 >;
 
 defm Minimum3Maximum3F32 : AMDGPUSubtargetFeature<"minimum3-maximum3-f32",
@@ -2794,6 +2794,10 @@ def HasMinMaxDenormModes : Predicate<"Subtarget->supportsMinMaxDenormModes()">;
 def NotHasMinMaxDenormModes : Predicate<"!Subtarget->supportsMinMaxDenormModes()">;
 
 def HasFminFmaxLegacy : Predicate<"Subtarget->hasFminFmaxLegacy()">;
+
+def HasSALUFloatInstsNotGFX11_7 :
+Predicate<"!(Subtarget->getGeneration() == AMDGPUSubtarget::GFX11 && Subtarget->hasGFX11_7Insts()) &&"
+            "Subtarget->hasSALUFloatInsts()">;
 
 def HasSDWA8 : Predicate<"Subtarget->hasSDWA()">,
   AssemblerPredicate<(all_of (not FeatureGFX9Insts), FeatureSDWA)>;
