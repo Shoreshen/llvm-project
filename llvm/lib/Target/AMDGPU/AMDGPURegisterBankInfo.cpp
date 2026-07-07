@@ -4111,7 +4111,7 @@ AMDGPURegisterBankInfo::getInstrMapping(const MachineInstr &MI) const {
     unsigned Size = Ty.getSizeInBits();
     if (Subtarget.hasSALUFloatInsts() && Ty.isScalar() &&
         (Size == 32 || Size == 16) && isSALUMapping(MI) &&
-        !Subtarget.hasGFX11_7Insts())
+        !Subtarget.hasNoSALUFMinNumFMaxNumInsts())
       return getDefaultMappingSOP(MI);
     return getDefaultMappingVOP(MI);
   }

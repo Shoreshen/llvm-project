@@ -995,7 +995,7 @@ let SubtargetPredicate = HasSALUFloatInsts, mayRaiseFPException = 1,
 } // End SubtargetPredicate = HasSALUFloatInsts, mayRaiseFPException = 1,
   // Uses = [MODE], SchedRW = [WriteSFPU]
 
-let OtherPredicates = [HasSALUFloatMinMaxInsts] in {
+let OtherPredicates = [HasSALUFMinNumFMaxNumInsts] in {
   def : GCNPat<(f32 (UniformBinFrag<fminnum_like> (f32 SSrc_f32:$src0),
                                                   (f32 SSrc_f32:$src1))),
                (S_MIN_F32 SSrc_f32:$src0, SSrc_f32:$src1)>;

@@ -1136,6 +1136,14 @@ defm SALUFloatInsts : AMDGPUSubtargetFeature<"salu-float",
   "Has SALU floating point instructions"
 >;
 
+// GFX11.7 uniquely pairs the legacy s_min/max_f32/f16 (mode-based fminnum/
+// fmaxnum) with the IEEE v_min/max_num_f32/f16, so the SALU and VALU results
+// are inconsistent. Mark it to keep float min/max selection on the VALU there.
+defm NoSALUFMinNumFMaxNumInsts : AMDGPUSubtargetFeature<"no-salu-fminnum-fmaxnum-insts",
+  "Do not select SALU s_min/max_f32/f16 (fminnum/fmaxnum) instructions",
+  /*GenPredicate=*/0
+>;
+
 defm PseudoScalarTrans : AMDGPUSubtargetFeature<"pseudo-scalar-trans",
   "Has Pseudo Scalar Transcendental instructions"
 >;
@@ -2075,6 +2083,7 @@ def FeatureISAVersion11_5_2 : FeatureSet<
 def FeatureISAVersion11_7_Common : FeatureSet<
   !listconcat(FeatureISAVersion11_Common.Features,
     [FeatureGFX11_7Insts,
+     FeatureNoSALUFMinNumFMaxNumInsts,
      FeatureSALUFloatInsts,
      FeatureDPPSrc1SGPR,
      FeatureFP8ConversionInsts,
@@ -2794,10 +2803,8 @@ def NotHasMinMaxDenormModes : Predicate<"!Subtarget->supportsMinMaxDenormModes()
 
 def HasFminFmaxLegacy : Predicate<"Subtarget->hasFminFmaxLegacy()">;
 
-// GFX11.7 has the SALU float instructions but not the SALU float min/max
-// instructions (s_min/max_f32/f16), so those patterns must be disabled there.
-def HasSALUFloatMinMaxInsts :
-Predicate<"!Subtarget->hasGFX11_7Insts() && Subtarget->hasSALUFloatInsts()">;
+def HasSALUFMinNumFMaxNumInsts :
+  Predicate<"Subtarget->hasSALUFloatInsts() && !Subtarget->hasNoSALUFMinNumFMaxNumInsts()">;
 
 def HasSDWA8 : Predicate<"Subtarget->hasSDWA()">,
   AssemblerPredicate<(all_of (not FeatureGFX9Insts), FeatureSDWA)>;
