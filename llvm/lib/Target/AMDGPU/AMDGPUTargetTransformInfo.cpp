@@ -1746,6 +1746,10 @@ GCNTTIImpl::getTypeLegalizationCost(Type *Ty) const {
   return Cost;
 }
 
+unsigned GCNTTIImpl::getCacheLineSize() const {
+  return ST->getDataCacheLineSize();
+}
+
 unsigned GCNTTIImpl::getPrefetchDistance() const {
   return ST->hasPrefetch() ? 128 : 0;
 }
