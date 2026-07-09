@@ -12,43 +12,43 @@ define amdgpu_kernel void @test_sched_group_barrier_pipeline_WMMA_cluster(ptr ad
 ; GCN-NEXT:    s_waitcnt lgkmcnt(0)
 ; GCN-NEXT:    v_add_nc_u32_e32 v8, s0, v16
 ; GCN-NEXT:    v_dual_mov_b32 v33, s1 :: v_dual_add_nc_u32 v16, s1, v16
+; GCN-NEXT:    ds_load_b128 v[0:3], v8
 ; GCN-NEXT:    ds_load_b128 v[4:7], v8 offset:16
 ; GCN-NEXT:    ds_load_b128 v[21:24], v8 offset:2064
-; GCN-NEXT:    ds_load_b128 v[38:41], v8 offset:6160
-; GCN-NEXT:    ds_load_b128 v[55:58], v8 offset:12304
-; GCN-NEXT:    ds_load_b128 v[12:15], v8 offset:20496
-; GCN-NEXT:    ds_load_b128 v[0:3], v8
 ; GCN-NEXT:    ds_load_b128 v[17:20], v8 offset:2048
+; GCN-NEXT:    ds_load_b128 v[38:41], v8 offset:6160
 ; GCN-NEXT:    ds_load_b128 v[34:37], v8 offset:6144
+; GCN-NEXT:    ds_load_b128 v[55:58], v8 offset:12304
 ; GCN-NEXT:    ds_load_b128 v[51:54], v8 offset:12288
+; GCN-NEXT:    ds_load_b128 v[12:15], v8 offset:20496
 ; GCN-NEXT:    ds_load_b128 v[8:11], v8 offset:20480
 ; GCN-NEXT:    ; sched_group_barrier mask(0x00000100) size(10) SyncID(0)
-; GCN-NEXT:    s_waitcnt lgkmcnt(3)
-; GCN-NEXT:    v_dual_mov_b32 v32, v7 :: v_dual_mov_b32 v49, v24
-; GCN-NEXT:    s_waitcnt lgkmcnt(2)
-; GCN-NEXT:    v_mov_b32_e32 v66, v41
-; GCN-NEXT:    s_waitcnt lgkmcnt(1)
-; GCN-NEXT:    v_mov_b32_e32 v74, v58
-; GCN-NEXT:    s_waitcnt lgkmcnt(0)
-; GCN-NEXT:    v_dual_mov_b32 v82, v15 :: v_dual_mov_b32 v31, v6
+; GCN-NEXT:    s_waitcnt lgkmcnt(8)
+; GCN-NEXT:    v_mov_b32_e32 v28, v3
+; GCN-NEXT:    v_dual_mov_b32 v32, v7 :: v_dual_mov_b32 v31, v6
 ; GCN-NEXT:    v_dual_mov_b32 v30, v5 :: v_dual_mov_b32 v29, v4
-; GCN-NEXT:    v_dual_mov_b32 v28, v3 :: v_dual_mov_b32 v27, v2
-; GCN-NEXT:    v_dual_mov_b32 v26, v1 :: v_dual_mov_b32 v25, v0
-; GCN-NEXT:    v_dual_mov_b32 v48, v23 :: v_dual_mov_b32 v47, v22
-; GCN-NEXT:    v_dual_mov_b32 v46, v21 :: v_dual_mov_b32 v45, v20
-; GCN-NEXT:    v_dual_mov_b32 v44, v19 :: v_dual_mov_b32 v43, v18
-; GCN-NEXT:    v_dual_mov_b32 v42, v17 :: v_dual_mov_b32 v65, v40
+; GCN-NEXT:    v_dual_mov_b32 v27, v2 :: v_dual_mov_b32 v26, v1
+; GCN-NEXT:    v_mov_b32_e32 v25, v0
+; GCN-NEXT:    s_waitcnt lgkmcnt(6)
+; GCN-NEXT:    v_dual_mov_b32 v49, v24 :: v_dual_mov_b32 v48, v23
+; GCN-NEXT:    v_dual_mov_b32 v47, v22 :: v_dual_mov_b32 v46, v21
+; GCN-NEXT:    v_dual_mov_b32 v45, v20 :: v_dual_mov_b32 v44, v19
+; GCN-NEXT:    v_dual_mov_b32 v43, v18 :: v_dual_mov_b32 v42, v17
+; GCN-NEXT:    s_waitcnt lgkmcnt(4)
+; GCN-NEXT:    v_dual_mov_b32 v66, v41 :: v_dual_mov_b32 v65, v40
 ; GCN-NEXT:    v_dual_mov_b32 v64, v39 :: v_dual_mov_b32 v63, v38
 ; GCN-NEXT:    v_dual_mov_b32 v62, v37 :: v_dual_mov_b32 v61, v36
 ; GCN-NEXT:    v_dual_mov_b32 v60, v35 :: v_dual_mov_b32 v59, v34
-; GCN-NEXT:    v_dual_mov_b32 v73, v57 :: v_dual_mov_b32 v72, v56
-; GCN-NEXT:    v_dual_mov_b32 v71, v55 :: v_dual_mov_b32 v70, v54
-; GCN-NEXT:    v_dual_mov_b32 v69, v53 :: v_dual_mov_b32 v68, v52
-; GCN-NEXT:    v_mov_b32_e32 v67, v51
-; GCN-NEXT:    v_dual_mov_b32 v81, v14 :: v_dual_mov_b32 v80, v13
-; GCN-NEXT:    v_dual_mov_b32 v79, v12 :: v_dual_mov_b32 v78, v11
-; GCN-NEXT:    v_dual_mov_b32 v77, v10 :: v_dual_mov_b32 v76, v9
-; GCN-NEXT:    v_mov_b32_e32 v75, v8
+; GCN-NEXT:    s_waitcnt lgkmcnt(2)
+; GCN-NEXT:    v_dual_mov_b32 v74, v58 :: v_dual_mov_b32 v73, v57
+; GCN-NEXT:    v_dual_mov_b32 v72, v56 :: v_dual_mov_b32 v71, v55
+; GCN-NEXT:    v_dual_mov_b32 v70, v54 :: v_dual_mov_b32 v69, v53
+; GCN-NEXT:    v_dual_mov_b32 v68, v52 :: v_dual_mov_b32 v67, v51
+; GCN-NEXT:    s_waitcnt lgkmcnt(0)
+; GCN-NEXT:    v_dual_mov_b32 v82, v15 :: v_dual_mov_b32 v81, v14
+; GCN-NEXT:    v_dual_mov_b32 v80, v13 :: v_dual_mov_b32 v79, v12
+; GCN-NEXT:    v_dual_mov_b32 v78, v11 :: v_dual_mov_b32 v77, v10
+; GCN-NEXT:    v_dual_mov_b32 v76, v9 :: v_dual_mov_b32 v75, v8
 ; GCN-NEXT:    v_wmma_f16_16x16x16_f16 v[25:32], v[0:7], v[0:7], v[25:32]
 ; GCN-NEXT:    v_wmma_f16_16x16x16_f16 v[42:49], v[17:24], v[17:24], v[42:49]
 ; GCN-NEXT:    v_wmma_f16_16x16x16_f16 v[59:66], v[34:41], v[34:41], v[59:66]
@@ -77,43 +77,43 @@ define amdgpu_kernel void @test_sched_group_barrier_pipeline_WMMA_cluster(ptr ad
 ; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(0)
 ; EXACTCUTOFF-NEXT:    v_add_nc_u32_e32 v8, s0, v16
 ; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v33, s1 :: v_dual_add_nc_u32 v16, s1, v16
+; EXACTCUTOFF-NEXT:    ds_load_b128 v[0:3], v8
 ; EXACTCUTOFF-NEXT:    ds_load_b128 v[4:7], v8 offset:16
 ; EXACTCUTOFF-NEXT:    ds_load_b128 v[21:24], v8 offset:2064
-; EXACTCUTOFF-NEXT:    ds_load_b128 v[38:41], v8 offset:6160
-; EXACTCUTOFF-NEXT:    ds_load_b128 v[55:58], v8 offset:12304
-; EXACTCUTOFF-NEXT:    ds_load_b128 v[12:15], v8 offset:20496
-; EXACTCUTOFF-NEXT:    ds_load_b128 v[0:3], v8
 ; EXACTCUTOFF-NEXT:    ds_load_b128 v[17:20], v8 offset:2048
+; EXACTCUTOFF-NEXT:    ds_load_b128 v[38:41], v8 offset:6160
 ; EXACTCUTOFF-NEXT:    ds_load_b128 v[34:37], v8 offset:6144
+; EXACTCUTOFF-NEXT:    ds_load_b128 v[55:58], v8 offset:12304
 ; EXACTCUTOFF-NEXT:    ds_load_b128 v[51:54], v8 offset:12288
+; EXACTCUTOFF-NEXT:    ds_load_b128 v[12:15], v8 offset:20496
 ; EXACTCUTOFF-NEXT:    ds_load_b128 v[8:11], v8 offset:20480
 ; EXACTCUTOFF-NEXT:    ; sched_group_barrier mask(0x00000100) size(10) SyncID(0)
-; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(3)
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v32, v7 :: v_dual_mov_b32 v49, v24
-; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(2)
-; EXACTCUTOFF-NEXT:    v_mov_b32_e32 v66, v41
-; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(1)
-; EXACTCUTOFF-NEXT:    v_mov_b32_e32 v74, v58
-; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(0)
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v82, v15 :: v_dual_mov_b32 v31, v6
+; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(8)
+; EXACTCUTOFF-NEXT:    v_mov_b32_e32 v28, v3
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v32, v7 :: v_dual_mov_b32 v31, v6
 ; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v30, v5 :: v_dual_mov_b32 v29, v4
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v28, v3 :: v_dual_mov_b32 v27, v2
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v26, v1 :: v_dual_mov_b32 v25, v0
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v48, v23 :: v_dual_mov_b32 v47, v22
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v46, v21 :: v_dual_mov_b32 v45, v20
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v44, v19 :: v_dual_mov_b32 v43, v18
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v42, v17 :: v_dual_mov_b32 v65, v40
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v27, v2 :: v_dual_mov_b32 v26, v1
+; EXACTCUTOFF-NEXT:    v_mov_b32_e32 v25, v0
+; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(6)
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v49, v24 :: v_dual_mov_b32 v48, v23
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v47, v22 :: v_dual_mov_b32 v46, v21
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v45, v20 :: v_dual_mov_b32 v44, v19
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v43, v18 :: v_dual_mov_b32 v42, v17
+; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(4)
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v66, v41 :: v_dual_mov_b32 v65, v40
 ; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v64, v39 :: v_dual_mov_b32 v63, v38
 ; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v62, v37 :: v_dual_mov_b32 v61, v36
 ; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v60, v35 :: v_dual_mov_b32 v59, v34
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v73, v57 :: v_dual_mov_b32 v72, v56
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v71, v55 :: v_dual_mov_b32 v70, v54
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v69, v53 :: v_dual_mov_b32 v68, v52
-; EXACTCUTOFF-NEXT:    v_mov_b32_e32 v67, v51
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v81, v14 :: v_dual_mov_b32 v80, v13
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v79, v12 :: v_dual_mov_b32 v78, v11
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v77, v10 :: v_dual_mov_b32 v76, v9
-; EXACTCUTOFF-NEXT:    v_mov_b32_e32 v75, v8
+; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(2)
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v74, v58 :: v_dual_mov_b32 v73, v57
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v72, v56 :: v_dual_mov_b32 v71, v55
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v70, v54 :: v_dual_mov_b32 v69, v53
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v68, v52 :: v_dual_mov_b32 v67, v51
+; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(0)
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v82, v15 :: v_dual_mov_b32 v81, v14
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v80, v13 :: v_dual_mov_b32 v79, v12
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v78, v11 :: v_dual_mov_b32 v77, v10
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v76, v9 :: v_dual_mov_b32 v75, v8
 ; EXACTCUTOFF-NEXT:    v_wmma_f16_16x16x16_f16 v[25:32], v[0:7], v[0:7], v[25:32]
 ; EXACTCUTOFF-NEXT:    v_wmma_f16_16x16x16_f16 v[42:49], v[17:24], v[17:24], v[42:49]
 ; EXACTCUTOFF-NEXT:    v_wmma_f16_16x16x16_f16 v[59:66], v[34:41], v[34:41], v[59:66]
