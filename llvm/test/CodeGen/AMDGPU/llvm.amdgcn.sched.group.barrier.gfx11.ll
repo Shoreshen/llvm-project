@@ -178,14 +178,15 @@ define amdgpu_kernel void @test_sched_group_barrier_pipeline_WMMA_interleave(ptr
 ; GCN-NEXT:    s_waitcnt lgkmcnt(0)
 ; GCN-NEXT:    v_add_nc_u32_e32 v17, s0, v16
 ; GCN-NEXT:    v_add_nc_u32_e32 v16, s1, v16
-; GCN-NEXT:    ds_load_b128 v[4:7], v17 offset:16
 ; GCN-NEXT:    ds_load_b128 v[0:3], v17
+; GCN-NEXT:    ds_load_b128 v[4:7], v17 offset:16
 ; GCN-NEXT:    ; sched_group_barrier mask(0x00000100) size(2) SyncID(0)
 ; GCN-NEXT:    s_waitcnt lgkmcnt(0)
+; GCN-NEXT:    v_mov_b32_e32 v11, v3
 ; GCN-NEXT:    v_dual_mov_b32 v15, v7 :: v_dual_mov_b32 v14, v6
 ; GCN-NEXT:    v_dual_mov_b32 v13, v5 :: v_dual_mov_b32 v12, v4
-; GCN-NEXT:    v_dual_mov_b32 v11, v3 :: v_dual_mov_b32 v10, v2
-; GCN-NEXT:    v_dual_mov_b32 v9, v1 :: v_dual_mov_b32 v8, v0
+; GCN-NEXT:    v_dual_mov_b32 v10, v2 :: v_dual_mov_b32 v9, v1
+; GCN-NEXT:    v_mov_b32_e32 v8, v0
 ; GCN-NEXT:    s_delay_alu instid0(VALU_DEP_1)
 ; GCN-NEXT:    v_wmma_f16_16x16x16_f16 v[8:15], v[0:7], v[0:7], v[8:15]
 ; GCN-NEXT:    ; sched_group_barrier mask(0x00000008) size(1) SyncID(0)
@@ -260,14 +261,15 @@ define amdgpu_kernel void @test_sched_group_barrier_pipeline_WMMA_interleave(ptr
 ; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(0)
 ; EXACTCUTOFF-NEXT:    v_add_nc_u32_e32 v17, s0, v16
 ; EXACTCUTOFF-NEXT:    v_add_nc_u32_e32 v16, s1, v16
-; EXACTCUTOFF-NEXT:    ds_load_b128 v[4:7], v17 offset:16
 ; EXACTCUTOFF-NEXT:    ds_load_b128 v[0:3], v17
+; EXACTCUTOFF-NEXT:    ds_load_b128 v[4:7], v17 offset:16
 ; EXACTCUTOFF-NEXT:    ; sched_group_barrier mask(0x00000100) size(2) SyncID(0)
 ; EXACTCUTOFF-NEXT:    s_waitcnt lgkmcnt(0)
+; EXACTCUTOFF-NEXT:    v_mov_b32_e32 v11, v3
 ; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v15, v7 :: v_dual_mov_b32 v14, v6
 ; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v13, v5 :: v_dual_mov_b32 v12, v4
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v11, v3 :: v_dual_mov_b32 v10, v2
-; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v9, v1 :: v_dual_mov_b32 v8, v0
+; EXACTCUTOFF-NEXT:    v_dual_mov_b32 v10, v2 :: v_dual_mov_b32 v9, v1
+; EXACTCUTOFF-NEXT:    v_mov_b32_e32 v8, v0
 ; EXACTCUTOFF-NEXT:    s_delay_alu instid0(VALU_DEP_1)
 ; EXACTCUTOFF-NEXT:    v_wmma_f16_16x16x16_f16 v[8:15], v[0:7], v[0:7], v[8:15]
 ; EXACTCUTOFF-NEXT:    ; sched_group_barrier mask(0x00000008) size(1) SyncID(0)
