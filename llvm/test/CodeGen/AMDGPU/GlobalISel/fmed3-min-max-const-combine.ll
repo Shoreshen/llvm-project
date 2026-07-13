@@ -92,9 +92,7 @@ define half @test_min_K1max_ValK0_f16(half %a) #0 {
 ; GFX1170-LABEL: test_min_K1max_ValK0_f16:
 ; GFX1170:       ; %bb.0:
 ; GFX1170-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
-; GFX1170-NEXT:    v_max_num_f16_e32 v0, v0, v0
-; GFX1170-NEXT:    s_delay_alu instid0(VALU_DEP_1)
-; GFX1170-NEXT:    v_med3_num_f16 v0, v0, 2.0, 4.0
+; GFX1170-NEXT:    v_maxmin_num_f16 v0, v0, 2.0, 4.0
 ; GFX1170-NEXT:    s_setpc_b64 s[30:31]
 ;
 ; GFX12-TRUE16-LABEL: test_min_K1max_ValK0_f16:
@@ -116,9 +114,7 @@ define half @test_min_K1max_ValK0_f16(half %a) #0 {
 ; GFX12-FAKE16-NEXT:    s_wait_samplecnt 0x0
 ; GFX12-FAKE16-NEXT:    s_wait_bvhcnt 0x0
 ; GFX12-FAKE16-NEXT:    s_wait_kmcnt 0x0
-; GFX12-FAKE16-NEXT:    v_max_num_f16_e32 v0, v0, v0
-; GFX12-FAKE16-NEXT:    s_delay_alu instid0(VALU_DEP_1)
-; GFX12-FAKE16-NEXT:    v_med3_num_f16 v0, v0, 2.0, 4.0
+; GFX12-FAKE16-NEXT:    v_maxmin_num_f16 v0, v0, 2.0, 4.0
 ; GFX12-FAKE16-NEXT:    s_setpc_b64 s[30:31]
   %maxnum = call half @llvm.maxnum.f16(half %a, half 2.0)
   %fmed = call half @llvm.minnum.f16(half 4.0, half %maxnum)

@@ -1759,65 +1759,18 @@ define amdgpu_kernel void @test_fmin_f16_v_ieee_on(ptr addrspace(1) %out, half %
 ; GFX9-NEXT:    buffer_store_short v0, off, s[0:3], 0
 ; GFX9-NEXT:    s_endpgm
 ;
-; GFX9-SDAG-LABEL: test_fmin_f16_v_ieee_on:
-; GFX9-SDAG:       ; %bb.0:
-; GFX9-SDAG-NEXT:    s_load_dword s6, s[4:5], 0x2c
-; GFX9-SDAG-NEXT:    s_load_dwordx2 s[0:1], s[4:5], 0x24
-; GFX9-SDAG-NEXT:    s_mov_b32 s3, 0xf000
-; GFX9-SDAG-NEXT:    s_mov_b32 s2, -1
-; GFX9-SDAG-NEXT:    s_waitcnt lgkmcnt(0)
-; GFX9-SDAG-NEXT:    s_lshr_b32 s4, s6, 16
-; GFX9-SDAG-NEXT:    v_max_f16_e64 v0, s4, s4
-; GFX9-SDAG-NEXT:    v_max_f16_e64 v1, s6, s6
-; GFX9-SDAG-NEXT:    v_min_f16_e32 v0, v1, v0
-; GFX9-SDAG-NEXT:    buffer_store_short v0, off, s[0:3], 0
-; GFX9-SDAG-NEXT:    s_endpgm
-;
-; GFX9-GISEL-LABEL: test_fmin_f16_v_ieee_on:
-; GFX9-GISEL:       ; %bb.0:
-; GFX9-GISEL-NEXT:    s_load_dword s3, s[4:5], 0x2c
-; GFX9-GISEL-NEXT:    s_load_dwordx2 s[0:1], s[4:5], 0x24
-; GFX9-GISEL-NEXT:    s_mov_b32 s2, -1
-; GFX9-GISEL-NEXT:    s_waitcnt lgkmcnt(0)
-; GFX9-GISEL-NEXT:    s_lshr_b32 s4, s3, 16
-; GFX9-GISEL-NEXT:    v_max_f16_e64 v0, s3, s3
-; GFX9-GISEL-NEXT:    v_max_f16_e64 v1, s4, s4
-; GFX9-GISEL-NEXT:    v_min_f16_e32 v0, v0, v1
-; GFX9-GISEL-NEXT:    s_mov_b32 s3, 0xf000
-; GFX9-GISEL-NEXT:    buffer_store_short v0, off, s[0:3], 0
-; GFX9-GISEL-NEXT:    s_endpgm
-;
-; GFX12-SDAG-LABEL: test_fmin_f16_v_ieee_on:
-; GFX12-SDAG:       ; %bb.0:
-; GFX12-SDAG-NEXT:    s_load_b96 s[0:2], s[4:5], 0x24
-; GFX12-SDAG-NEXT:    s_wait_kmcnt 0x0
-; GFX12-SDAG-NEXT:    s_lshr_b32 s3, s2, 16
-; GFX12-SDAG-NEXT:    s_delay_alu instid0(SALU_CYCLE_1) | instskip(SKIP_1) | instid1(SALU_CYCLE_2)
-; GFX12-SDAG-NEXT:    s_min_num_f16 s2, s2, s3
-; GFX12-SDAG-NEXT:    s_mov_b32 s3, 0x31016000
-; GFX12-SDAG-NEXT:    v_mov_b16_e32 v0.l, s2
-; GFX12-SDAG-NEXT:    s_mov_b32 s2, -1
-; GFX12-SDAG-NEXT:    buffer_store_b16 v0, off, s[0:3], null
-; GFX12-SDAG-NEXT:    s_endpgm
-;
-; GFX12-GISEL-LABEL: test_fmin_f16_v_ieee_on:
-; GFX12-GISEL:       ; %bb.0:
-; GFX12-GISEL-NEXT:    s_load_b96 s[0:2], s[4:5], 0x24
-; GFX12-GISEL-NEXT:    s_wait_kmcnt 0x0
-; GFX12-GISEL-NEXT:    s_lshr_b32 s3, s2, 16
-; GFX12-GISEL-NEXT:    v_max_num_f16_e64 v0.l, s2, s2
-; GFX12-GISEL-NEXT:    v_max_num_f16_e64 v1.l, s3, s3
-; GFX12-GISEL-NEXT:    s_delay_alu instid0(VALU_DEP_2) | instskip(NEXT) | instid1(VALU_DEP_2)
-; GFX12-GISEL-NEXT:    v_readfirstlane_b32 s2, v0
-; GFX12-GISEL-NEXT:    v_readfirstlane_b32 s3, v1
-; GFX12-GISEL-NEXT:    s_min_num_f16 s2, s2, s3
-; GFX12-GISEL-NEXT:    s_mov_b32 s3, 0x31016000
-; GFX12-GISEL-NEXT:    s_wait_alu depctr_sa_sdst(0)
-; GFX12-GISEL-NEXT:    s_delay_alu instid0(SALU_CYCLE_1)
-; GFX12-GISEL-NEXT:    v_mov_b16_e32 v0.l, s2
-; GFX12-GISEL-NEXT:    s_mov_b32 s2, -1
-; GFX12-GISEL-NEXT:    buffer_store_b16 v0, off, s[0:3], null
-; GFX12-GISEL-NEXT:    s_endpgm
+; GFX12-LABEL: test_fmin_f16_v_ieee_on:
+; GFX12:       ; %bb.0:
+; GFX12-NEXT:    s_load_b96 s[0:2], s[4:5], 0x24
+; GFX12-NEXT:    s_wait_kmcnt 0x0
+; GFX12-NEXT:    s_lshr_b32 s3, s2, 16
+; GFX12-NEXT:    s_delay_alu instid0(SALU_CYCLE_1) | instskip(SKIP_1) | instid1(SALU_CYCLE_2)
+; GFX12-NEXT:    s_min_num_f16 s2, s2, s3
+; GFX12-NEXT:    s_mov_b32 s3, 0x31016000
+; GFX12-NEXT:    v_mov_b16_e32 v0.l, s2
+; GFX12-NEXT:    s_mov_b32 s2, -1
+; GFX12-NEXT:    buffer_store_b16 v0, off, s[0:3], null
+; GFX12-NEXT:    s_endpgm
   %val = call half @llvm.minnum.f16(half %a, half %b)
   store half %val, ptr addrspace(1) %out, align 2
   ret void
