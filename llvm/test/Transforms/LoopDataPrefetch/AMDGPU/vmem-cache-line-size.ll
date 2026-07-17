@@ -34,7 +34,11 @@ define amdgpu_kernel void @prefetch_two_streams_80B(ptr addrspace(1) nocapture %
 ; GFX1200-NEXT:    br label %[[FOR_BODY:.*]]
 ; GFX1200:       [[FOR_BODY]]:
 ; GFX1200-NEXT:    [[IV:%.*]] = phi i64 [ 0, %[[ENTRY]] ], [ [[IV_NEXT:%.*]], %[[FOR_BODY]] ]
+; GFX1200-NEXT:    [[TMP0:%.*]] = shl i64 [[IV]], 2
+; GFX1200-NEXT:    [[TMP1:%.*]] = add i64 [[TMP0]], 28
+; GFX1200-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr addrspace(1) [[B]], i64 [[TMP1]]
 ; GFX1200-NEXT:    [[IDX0:%.*]] = getelementptr inbounds i32, ptr addrspace(1) [[B]], i64 [[IV]]
+; GFX1200-NEXT:    call void @llvm.prefetch.p1(ptr addrspace(1) [[SCEVGEP]], i32 0, i32 3, i32 1)
 ; GFX1200-NEXT:    [[V0:%.*]] = load i32, ptr addrspace(1) [[IDX0]], align 4
 ; GFX1200-NEXT:    [[IV_OFF:%.*]] = add i64 [[IV]], 20
 ; GFX1200-NEXT:    [[IDX1:%.*]] = getelementptr inbounds i32, ptr addrspace(1) [[B]], i64 [[IV_OFF]]
@@ -124,10 +128,18 @@ define amdgpu_kernel void @prefetch_two_streams_160B(ptr addrspace(1) nocapture 
 ; GFX1200-NEXT:    br label %[[FOR_BODY:.*]]
 ; GFX1200:       [[FOR_BODY]]:
 ; GFX1200-NEXT:    [[IV:%.*]] = phi i64 [ 0, %[[ENTRY]] ], [ [[IV_NEXT:%.*]], %[[FOR_BODY]] ]
+; GFX1200-NEXT:    [[TMP0:%.*]] = shl i64 [[IV]], 2
+; GFX1200-NEXT:    [[TMP1:%.*]] = add i64 [[TMP0]], 188
+; GFX1200-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr addrspace(1) [[B]], i64 [[TMP1]]
+; GFX1200-NEXT:    [[TMP2:%.*]] = shl i64 [[IV]], 2
+; GFX1200-NEXT:    [[TMP3:%.*]] = add i64 [[TMP2]], 28
+; GFX1200-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr addrspace(1) [[B]], i64 [[TMP3]]
 ; GFX1200-NEXT:    [[IDX0:%.*]] = getelementptr inbounds i32, ptr addrspace(1) [[B]], i64 [[IV]]
+; GFX1200-NEXT:    call void @llvm.prefetch.p1(ptr addrspace(1) [[SCEVGEP]], i32 0, i32 3, i32 1)
 ; GFX1200-NEXT:    [[V0:%.*]] = load i32, ptr addrspace(1) [[IDX0]], align 4
 ; GFX1200-NEXT:    [[IV_OFF:%.*]] = add i64 [[IV]], 40
 ; GFX1200-NEXT:    [[IDX1:%.*]] = getelementptr inbounds i32, ptr addrspace(1) [[B]], i64 [[IV_OFF]]
+; GFX1200-NEXT:    call void @llvm.prefetch.p1(ptr addrspace(1) [[SCEVGEP1]], i32 0, i32 3, i32 1)
 ; GFX1200-NEXT:    [[V1:%.*]] = load i32, ptr addrspace(1) [[IDX1]], align 4
 ; GFX1200-NEXT:    [[SUM:%.*]] = add i32 [[V0]], [[V1]]
 ; GFX1200-NEXT:    [[SIDX:%.*]] = getelementptr inbounds i32, ptr addrspace(1) [[A]], i64 [[IV]]
@@ -214,10 +226,18 @@ define amdgpu_kernel void @prefetch_two_streams_320B(ptr addrspace(1) nocapture 
 ; GFX1200-NEXT:    br label %[[FOR_BODY:.*]]
 ; GFX1200:       [[FOR_BODY]]:
 ; GFX1200-NEXT:    [[IV:%.*]] = phi i64 [ 0, %[[ENTRY]] ], [ [[IV_NEXT:%.*]], %[[FOR_BODY]] ]
+; GFX1200-NEXT:    [[TMP0:%.*]] = shl i64 [[IV]], 2
+; GFX1200-NEXT:    [[TMP1:%.*]] = add i64 [[TMP0]], 348
+; GFX1200-NEXT:    [[SCEVGEP1:%.*]] = getelementptr i8, ptr addrspace(1) [[B]], i64 [[TMP1]]
+; GFX1200-NEXT:    [[TMP2:%.*]] = shl i64 [[IV]], 2
+; GFX1200-NEXT:    [[TMP3:%.*]] = add i64 [[TMP2]], 28
+; GFX1200-NEXT:    [[SCEVGEP:%.*]] = getelementptr i8, ptr addrspace(1) [[B]], i64 [[TMP3]]
 ; GFX1200-NEXT:    [[IDX0:%.*]] = getelementptr inbounds i32, ptr addrspace(1) [[B]], i64 [[IV]]
+; GFX1200-NEXT:    call void @llvm.prefetch.p1(ptr addrspace(1) [[SCEVGEP]], i32 0, i32 3, i32 1)
 ; GFX1200-NEXT:    [[V0:%.*]] = load i32, ptr addrspace(1) [[IDX0]], align 4
 ; GFX1200-NEXT:    [[IV_OFF:%.*]] = add i64 [[IV]], 80
 ; GFX1200-NEXT:    [[IDX1:%.*]] = getelementptr inbounds i32, ptr addrspace(1) [[B]], i64 [[IV_OFF]]
+; GFX1200-NEXT:    call void @llvm.prefetch.p1(ptr addrspace(1) [[SCEVGEP1]], i32 0, i32 3, i32 1)
 ; GFX1200-NEXT:    [[V1:%.*]] = load i32, ptr addrspace(1) [[IDX1]], align 4
 ; GFX1200-NEXT:    [[SUM:%.*]] = add i32 [[V0]], [[V1]]
 ; GFX1200-NEXT:    [[SIDX:%.*]] = getelementptr inbounds i32, ptr addrspace(1) [[A]], i64 [[IV]]
