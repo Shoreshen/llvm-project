@@ -414,7 +414,7 @@ class SubtargetFeatureDataCacheLineSize <int Value> : SubtargetFeature <
   "Data (VMEM) cache line size in bytes."
 >;
 
-def FeatureDataCacheLineSize128 : SubtargetFeatureDataCacheLineSize<128>;
+def FeatureCanPrefetchData128 : SubtargetFeatureDataCacheLineSize<128>;
 
 defm GCN3Encoding : AMDGPUSubtargetFeature<"gcn3-encoding",
   "Encoding format for VI",
@@ -2172,7 +2172,7 @@ def FeatureISAVersion12 : FeatureSet<
    FeatureRealTrue16Insts,
    FeatureMTBUFInsts,
    FeatureFormattedMUBUFInsts,
-   FeatureDataCacheLineSize128
+   FeatureCanPrefetchData128
    ]>;
 
 def FeatureISAVersion12_50_Common : FeatureSet<
@@ -2279,7 +2279,7 @@ def FeatureISAVersion12_50 : FeatureSet<
    FeatureSWMMACGfx1250Insts,
    FeatureTransCoexecutionHazard,
    FeatureWMMACoexecutionHazards,
-   FeatureDataCacheLineSize128,
+   FeatureCanPrefetchData128,
    FeatureRequiresInitialUnclausedVmem,
    ])>;
 
@@ -2308,13 +2308,13 @@ def FeatureISAVersion12_51 : FeatureSet<
    FeatureUseAddPC64Inst,
    FeatureTransCoexecutionHazard,
    FeatureWMMACoexecutionHazards,
-   FeatureDataCacheLineSize128,
+   FeatureCanPrefetchData128,
    FeatureRequiresInitialUnclausedVmem,
    ])>;
 
 def FeatureISAVersion12_Generic: FeatureSet<
   !listconcat(FeatureISAVersion12.Features,
-    [FeatureDataCacheLineSize128,
+    [FeatureCanPrefetchData128,
      FeatureRequiresCOV6])>;
 
 def FeatureISAVersion12_5_Generic: FeatureSet<
@@ -2326,7 +2326,7 @@ def FeatureISAVersion12_5_Generic: FeatureSet<
    FeatureGFX125xLowestRateWMMA,
    FeatureTransCoexecutionHazard,
    FeatureWMMACoexecutionHazards,
-   FeatureDataCacheLineSize128,
+   FeatureCanPrefetchData128,
    FeatureRequiresInitialUnclausedVmem,
    ])>;
 
