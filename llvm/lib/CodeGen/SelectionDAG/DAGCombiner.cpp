@@ -27566,7 +27566,9 @@ static SDValue narrowInsertExtractVectorBinOp(SDNode *N, SDValue BinOp,
   auto IsZeroOrUndef = [](SDValue V) {
     return V && (V.isUndef() || isNullOrNullSplat(V, /*AllowUndefs=*/true));
   };
-  if (HasNonExtUser) {
+
+  // If VecVT is not legal, narrow it anyway
+  if (HasNonExtUser && TLI.isTypeLegal(VecVT)) {
     if (HasNonZeroExt)
       return SDValue();
     for (auto &[Ext, Sub0, Sub1] : drop_begin(Slots)) {
