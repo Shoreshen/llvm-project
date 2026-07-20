@@ -27432,14 +27432,8 @@ SDValue DAGCombiner::visitVECTOR_INTERLEAVE(SDNode *N) {
   return CombineTo(N, &Ops);
 }
 
-// Scan one wide operand's INSERT_SUBVECTOR chain (optionally rooted at a
-// CONCAT_VECTORS) a single time and fill in OpNo's source for each SubVT-sized
-// slot. Slots are indexed by their subvector position, so the chain is never
-// recorded wholesale. Each slot is a tuple of the extract_subvector user (if
-// any) and the matching subvector source from each wide operand; a slot whose
-// two sources are both null was never seen on either chain (i.e. it is undef).
-// The outermost definition of a slot wins; an insert that is not SubVT-aligned
-// can straddle two slots, so we stop there and leave deeper slots unavailable.
+// Collect the available SubVT-sized sources from a wide operand. Stop at the
+// first unaligned insert; outermost definitions take precedence.
 static void collectSubVectorSrcs(
     SDValue V, EVT SubVT, unsigned OpNo,
     MutableArrayRef<std::tuple<SDNode *, SDValue, SDValue>> Slots) {
@@ -27454,8 +27448,8 @@ static void collectSubVectorSrcs(
   };
   if (V.getOpcode() == ISD::CONCAT_VECTORS &&
       V.getOperand(0).getValueType() == SubVT) {
-    for (unsigned I = 0, E = V.getNumOperands(); I != E; ++I)
-      record(I, V.getOperand(I));
+    for (auto [I, Op] : enumerate(V->op_values()))
+      record(I, Op);
     return;
   }
 
@@ -27469,27 +27463,10 @@ static void collectSubVectorSrcs(
   }
 }
 
-// Try to narrow a wide vector binop whose result is consumed *only* by
-// extract_subvector nodes that all extract the SAME narrow type SubVT. The
-// pattern, for each extract at index Idx, is:
-//   extract (binop (insert/concat ..., X, Idx), (insert/concat ..., Y, Idx)),
-//   Idx
-// Within one such match the two inserts and the extract share the same Idx, and
-// across the different extracts the indices are subvector-aligned and strided
-// by the subvector element count: Idx is a multiple of
-// SubVT.getVectorNumElements() (0, NumSubElts, 2*NumSubElts, ...), so each
-// extract pulls out a distinct, non-overlapping SubVT-sized slot.
-// Overlapping/unaligned indices (e.g. extract lanes 0-1 then 1-2) are rejected.
-// When every extract pulls the same SubVT out of both wide operands for free,
-// we replace the wide binop by one narrow binop per extract, eliminating all of
-// the inserts/extracts and the wide binop in a single combine:
-//   extract ..., Idx --> binop X, Y
-// We use a flat per-slot table indexed by subvector position, then scan each
-// wide operand's insert/concat chain exactly once to fill in the per-operand
-// sources, so the chains are never re-walked per extract. N is the extract
-// currently being combined: its narrow binop is returned for the caller to
-// fold in, while the sibling extracts are rewritten here so the wide binop is
-// left with no users.
+// Try to narrow a wide vector binop for aligned extract_subvector users of the
+// same type. If the matching source subvectors are available and the transform
+// is profitable, replace the wide operation and its extracts with narrow
+// binops. Return the replacement for the current extract.
 static SDValue narrowInsertExtractVectorBinOp(SDNode *N, SDValue BinOp,
                                               SelectionDAG &DAG,
                                               bool LegalOperations) {
