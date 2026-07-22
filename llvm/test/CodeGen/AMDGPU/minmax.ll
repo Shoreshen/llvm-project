@@ -1095,23 +1095,20 @@ define amdgpu_ps void @s_test_minmax_f16_ieee_false(half inreg %a, half inreg %b
 ;
 ; GISEL-GFX1170-TRUE16-LABEL: s_test_minmax_f16_ieee_false:
 ; GISEL-GFX1170-TRUE16:       ; %bb.0:
-; GISEL-GFX1170-TRUE16-NEXT:    s_max_f16 s0, s0, s1
+; GISEL-GFX1170-TRUE16-NEXT:    v_mov_b16_e32 v0.l, s2
 ; GISEL-GFX1170-TRUE16-NEXT:    v_mov_b32_e32 v1, 0
 ; GISEL-GFX1170-TRUE16-NEXT:    s_mov_b32 s6, s3
 ; GISEL-GFX1170-TRUE16-NEXT:    s_mov_b32 s7, s4
-; GISEL-GFX1170-TRUE16-NEXT:    s_min_f16 s0, s0, s2
-; GISEL-GFX1170-TRUE16-NEXT:    v_mov_b16_e32 v0.l, s0
+; GISEL-GFX1170-TRUE16-NEXT:    v_maxmin_num_f16 v0.l, s0, s1, v0.l
 ; GISEL-GFX1170-TRUE16-NEXT:    global_store_b16 v1, v0, s[6:7]
 ; GISEL-GFX1170-TRUE16-NEXT:    s_endpgm
 ;
 ; GISEL-GFX1170-FAKE16-LABEL: s_test_minmax_f16_ieee_false:
 ; GISEL-GFX1170-FAKE16:       ; %bb.0:
-; GISEL-GFX1170-FAKE16-NEXT:    s_max_f16 s0, s0, s1
+; GISEL-GFX1170-FAKE16-NEXT:    v_dual_mov_b32 v0, s2 :: v_dual_mov_b32 v1, 0
 ; GISEL-GFX1170-FAKE16-NEXT:    s_mov_b32 s6, s3
 ; GISEL-GFX1170-FAKE16-NEXT:    s_mov_b32 s7, s4
-; GISEL-GFX1170-FAKE16-NEXT:    v_mov_b32_e32 v1, 0
-; GISEL-GFX1170-FAKE16-NEXT:    s_min_f16 s0, s0, s2
-; GISEL-GFX1170-FAKE16-NEXT:    v_mov_b32_e32 v0, s0
+; GISEL-GFX1170-FAKE16-NEXT:    v_maxmin_num_f16 v0, s0, s1, v0
 ; GISEL-GFX1170-FAKE16-NEXT:    global_store_b16 v1, v0, s[6:7]
 ; GISEL-GFX1170-FAKE16-NEXT:    s_endpgm
 ;
