@@ -1083,23 +1083,20 @@ define amdgpu_ps void @s_test_minmax_f16_ieee_false(half inreg %a, half inreg %b
 ;
 ; GISEL-GFX1170-TRUE16-LABEL: s_test_minmax_f16_ieee_false:
 ; GISEL-GFX1170-TRUE16:       ; %bb.0:
-; GISEL-GFX1170-TRUE16-NEXT:    s_max_f16 s0, s0, s1
+; GISEL-GFX1170-TRUE16-NEXT:    v_mov_b16_e32 v0.l, s2
 ; GISEL-GFX1170-TRUE16-NEXT:    v_mov_b32_e32 v1, 0
 ; GISEL-GFX1170-TRUE16-NEXT:    s_mov_b32 s6, s3
 ; GISEL-GFX1170-TRUE16-NEXT:    s_mov_b32 s7, s4
-; GISEL-GFX1170-TRUE16-NEXT:    s_min_f16 s0, s0, s2
-; GISEL-GFX1170-TRUE16-NEXT:    v_mov_b16_e32 v0.l, s0
+; GISEL-GFX1170-TRUE16-NEXT:    v_maxmin_num_f16 v0.l, s0, s1, v0.l
 ; GISEL-GFX1170-TRUE16-NEXT:    global_store_b16 v1, v0, s[6:7]
 ; GISEL-GFX1170-TRUE16-NEXT:    s_endpgm
 ;
 ; GISEL-GFX1170-FAKE16-LABEL: s_test_minmax_f16_ieee_false:
 ; GISEL-GFX1170-FAKE16:       ; %bb.0:
-; GISEL-GFX1170-FAKE16-NEXT:    s_max_f16 s0, s0, s1
+; GISEL-GFX1170-FAKE16-NEXT:    v_dual_mov_b32 v0, s2 :: v_dual_mov_b32 v1, 0
 ; GISEL-GFX1170-FAKE16-NEXT:    s_mov_b32 s6, s3
 ; GISEL-GFX1170-FAKE16-NEXT:    s_mov_b32 s7, s4
-; GISEL-GFX1170-FAKE16-NEXT:    v_mov_b32_e32 v1, 0
-; GISEL-GFX1170-FAKE16-NEXT:    s_min_f16 s0, s0, s2
-; GISEL-GFX1170-FAKE16-NEXT:    v_mov_b32_e32 v0, s0
+; GISEL-GFX1170-FAKE16-NEXT:    v_maxmin_num_f16 v0, s0, s1, v0
 ; GISEL-GFX1170-FAKE16-NEXT:    global_store_b16 v1, v0, s[6:7]
 ; GISEL-GFX1170-FAKE16-NEXT:    s_endpgm
 ;
@@ -1263,6 +1260,9 @@ define half @test_minmax_commuted_f16_ieee_true(half %a, half %b, half %c) {
 ; GISEL-GFX1170-FAKE16-LABEL: test_minmax_commuted_f16_ieee_true:
 ; GISEL-GFX1170-FAKE16:       ; %bb.0:
 ; GISEL-GFX1170-FAKE16-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
+; GISEL-GFX1170-FAKE16-NEXT:    v_max_num_f16_e32 v0, v0, v0
+; GISEL-GFX1170-FAKE16-NEXT:    v_max_num_f16_e32 v1, v1, v1
+; GISEL-GFX1170-FAKE16-NEXT:    v_max_num_f16_e32 v2, v2, v2
 ; GISEL-GFX1170-FAKE16-NEXT:    v_maxmin_num_f16 v0, v0, v1, v2
 ; GISEL-GFX1170-FAKE16-NEXT:    s_setpc_b64 s[30:31]
 ;
@@ -1306,6 +1306,9 @@ define half @test_minmax_commuted_f16_ieee_true(half %a, half %b, half %c) {
 ; GISEL-GFX12-FAKE16-NEXT:    s_wait_samplecnt 0x0
 ; GISEL-GFX12-FAKE16-NEXT:    s_wait_bvhcnt 0x0
 ; GISEL-GFX12-FAKE16-NEXT:    s_wait_kmcnt 0x0
+; GISEL-GFX12-FAKE16-NEXT:    v_max_num_f16_e32 v0, v0, v0
+; GISEL-GFX12-FAKE16-NEXT:    v_max_num_f16_e32 v1, v1, v1
+; GISEL-GFX12-FAKE16-NEXT:    v_max_num_f16_e32 v2, v2, v2
 ; GISEL-GFX12-FAKE16-NEXT:    v_maxmin_num_f16 v0, v0, v1, v2
 ; GISEL-GFX12-FAKE16-NEXT:    s_setpc_b64 s[30:31]
 ;
@@ -1337,6 +1340,9 @@ define half @test_minmax_commuted_f16_ieee_true(half %a, half %b, half %c) {
 ; GISEL-GFX1250-FAKE16:       ; %bb.0:
 ; GISEL-GFX1250-FAKE16-NEXT:    s_wait_loadcnt_dscnt 0x0
 ; GISEL-GFX1250-FAKE16-NEXT:    s_wait_kmcnt 0x0
+; GISEL-GFX1250-FAKE16-NEXT:    v_max_num_f16_e32 v0, v0, v0
+; GISEL-GFX1250-FAKE16-NEXT:    v_max_num_f16_e32 v1, v1, v1
+; GISEL-GFX1250-FAKE16-NEXT:    v_max_num_f16_e32 v2, v2, v2
 ; GISEL-GFX1250-FAKE16-NEXT:    v_maxmin_num_f16 v0, v0, v1, v2
 ; GISEL-GFX1250-FAKE16-NEXT:    s_set_pc_i64 s[30:31]
   %max = call half @llvm.maxnum.f16(half %a, half %b)
@@ -1502,6 +1508,9 @@ define half @test_maxmin_commuted_f16_ieee_true(half %a, half %b, half %c) {
 ; GISEL-GFX1170-FAKE16-LABEL: test_maxmin_commuted_f16_ieee_true:
 ; GISEL-GFX1170-FAKE16:       ; %bb.0:
 ; GISEL-GFX1170-FAKE16-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
+; GISEL-GFX1170-FAKE16-NEXT:    v_max_num_f16_e32 v0, v0, v0
+; GISEL-GFX1170-FAKE16-NEXT:    v_max_num_f16_e32 v1, v1, v1
+; GISEL-GFX1170-FAKE16-NEXT:    v_max_num_f16_e32 v2, v2, v2
 ; GISEL-GFX1170-FAKE16-NEXT:    v_minmax_num_f16 v0, v0, v1, v2
 ; GISEL-GFX1170-FAKE16-NEXT:    s_setpc_b64 s[30:31]
 ;
@@ -1545,6 +1554,9 @@ define half @test_maxmin_commuted_f16_ieee_true(half %a, half %b, half %c) {
 ; GISEL-GFX12-FAKE16-NEXT:    s_wait_samplecnt 0x0
 ; GISEL-GFX12-FAKE16-NEXT:    s_wait_bvhcnt 0x0
 ; GISEL-GFX12-FAKE16-NEXT:    s_wait_kmcnt 0x0
+; GISEL-GFX12-FAKE16-NEXT:    v_max_num_f16_e32 v0, v0, v0
+; GISEL-GFX12-FAKE16-NEXT:    v_max_num_f16_e32 v1, v1, v1
+; GISEL-GFX12-FAKE16-NEXT:    v_max_num_f16_e32 v2, v2, v2
 ; GISEL-GFX12-FAKE16-NEXT:    v_minmax_num_f16 v0, v0, v1, v2
 ; GISEL-GFX12-FAKE16-NEXT:    s_setpc_b64 s[30:31]
 ;
@@ -1576,6 +1588,9 @@ define half @test_maxmin_commuted_f16_ieee_true(half %a, half %b, half %c) {
 ; GISEL-GFX1250-FAKE16:       ; %bb.0:
 ; GISEL-GFX1250-FAKE16-NEXT:    s_wait_loadcnt_dscnt 0x0
 ; GISEL-GFX1250-FAKE16-NEXT:    s_wait_kmcnt 0x0
+; GISEL-GFX1250-FAKE16-NEXT:    v_max_num_f16_e32 v0, v0, v0
+; GISEL-GFX1250-FAKE16-NEXT:    v_max_num_f16_e32 v1, v1, v1
+; GISEL-GFX1250-FAKE16-NEXT:    v_max_num_f16_e32 v2, v2, v2
 ; GISEL-GFX1250-FAKE16-NEXT:    v_minmax_num_f16 v0, v0, v1, v2
 ; GISEL-GFX1250-FAKE16-NEXT:    s_set_pc_i64 s[30:31]
   %min = call half @llvm.minnum.f16(half %a, half %b)
