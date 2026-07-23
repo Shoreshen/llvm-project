@@ -204,11 +204,7 @@ public:
 
   /// Data (VMEM) cache line size in bytes (128 for gfx12), has no use before
   /// GFX12.
-  unsigned getDataCacheLineSize() const {
-    if (hasVmemPrefInsts() || hasSmemPrefetchInsts())
-      return DataCacheLineSize;
-    return 0;
-  }
+  unsigned getDataCacheLineSize() const { return DataCacheLineSize; }
 
   unsigned getMaxPrivateElementSize(bool ForBufferRSrc = false) const {
     return (ForBufferRSrc || !hasFlatScratchEnabled()) ? MaxPrivateElementSize
