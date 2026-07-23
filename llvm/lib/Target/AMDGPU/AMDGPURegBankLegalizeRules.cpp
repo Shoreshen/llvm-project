@@ -1674,8 +1674,7 @@ RegBankLegalizeRules::RegBankLegalizeRules(const GCNSubtarget &_ST,
       .Uni(V2S16, {{UniInVgprV2S16}, {VgprV2S16, VgprV2S16}})
       .Div(V2S16, {{VgprV2S16}, {VgprV2S16, VgprV2S16}});
 
-  bool hasSMINNUMMAXNUMPattern =
-      hasSALUFloat && !ST->hasNoSALUFMinNumFMaxNumInsts();
+  bool hasSMINNUMMAXNUMPattern = ST->hasSALUFMinNumFMaxNumInsts();
   addRulesForGOpcs({G_FMINNUM_IEEE, G_FMAXNUM_IEEE, G_FMINNUM, G_FMAXNUM,
                     G_FMINIMUMNUM, G_FMAXIMUMNUM},
                    Standard)
