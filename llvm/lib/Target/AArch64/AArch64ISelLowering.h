@@ -813,7 +813,7 @@ private:
   SDValue LowerFCANONICALIZE(SDValue Op, SelectionDAG &DAG) const;
   SDValue LowerAVG(SDValue Op, SelectionDAG &DAG, unsigned NewOp) const;
 
-  SDValue tryLowerFPToIntToSVE(SDValue Op, SelectionDAG &DAG) const;
+  SDValue LowerFPToIntToSVE(SDValue Op, SelectionDAG &DAG) const;
 
   SDValue LowerFixedLengthVectorIntDivideToSVE(SDValue Op,
                                                SelectionDAG &DAG) const;
