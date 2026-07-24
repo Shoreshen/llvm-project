@@ -4109,9 +4109,8 @@ AMDGPURegisterBankInfo::getInstrMapping(const MachineInstr &MI) const {
   case AMDGPU::G_FMAXIMUMNUM: {
     LLT Ty = MRI.getType(MI.getOperand(0).getReg());
     unsigned Size = Ty.getSizeInBits();
-    if (Subtarget.hasSALUFloatInsts() && Ty.isScalar() &&
-        (Size == 32 || Size == 16) && isSALUMapping(MI) &&
-        Subtarget.hasGFX11_7Insts())
+    if (Ty.isScalar() && (Size == 32 || Size == 16) && isSALUMapping(MI) &&
+        Subtarget.hasSALUFMinNumFMaxNumInsts())
       return getDefaultMappingSOP(MI);
     return getDefaultMappingVOP(MI);
   }
